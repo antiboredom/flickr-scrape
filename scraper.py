@@ -46,17 +46,6 @@ def get_photos(q, page=1, bbox=None):
 
     results = requests.get('https://api.flickr.com/services/rest', params=params).json()['photos']
     return results
-    # total_pages = results['pages']
-    # photos = results['photo']
-    # return total_pages
-    # print(results)
-    # print(total_pages)
-    # for p in photos:
-    #     print(p)
-    #     print(p.get('url_l'))
-    #     print(p.get('datetaken'))
-        # if 'url_o' in p:
-        #     print(p['url_o'])
 
 
 def search(q, bbox=None):
