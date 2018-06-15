@@ -48,7 +48,7 @@ def get_photos(q, page=1, bbox=None):
     return results
 
 
-def search(q, bbox=None):
+def search(q, bbox=None, max_pages=None):
     # create a folder for the query if it does not exist
     foldername = os.path.join('images', re.sub(r'[\W]', '_', q))
     if bbox is not None:
@@ -68,6 +68,9 @@ def search(q, bbox=None):
         results = get_photos(q, page=current_page, bbox=bbox)
 
         total_pages = results['pages']
+        if max_pages is not None and total_pages > max_pages:
+            total_pages = max_pages
+
         photos += results['photo']
 
         while current_page < total_pages:
@@ -100,6 +103,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Download images from flickr')
     parser.add_argument('--search', '-s', dest='q', required=True, help='Search term')
+    parser.add_argument('--max-pages', '-m', dest='max_pages', required=False, help='Max pages (default none)')
     parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by commas like so: minimum_longitude,minimum_latitude,maximum_longitude,maximum_latitude')
     args = parser.parse_args()
 
@@ -117,4 +121,8 @@ if __name__ == '__main__':
     if bbox:
         print('Within', bbox)
 
-    search(q, bbox)
+    max_pages = None
+    if args.max_pages:
+        max_pages = int(args.max_pages)
+
+    search(q, bbox, max_pages)
