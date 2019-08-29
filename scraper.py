@@ -95,7 +95,7 @@ def search(q, bbox=None, max_pages=None):
             localname = os.path.join(foldername, '{}.{}'.format(photo['id'], extension))
             if not os.path.exists(localname):
                 download_file(url, localname)
-        except:
+        except Exception as e:
             continue
 
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
     try:
         bbox = args.bbox.split(',')
-    except:
+    except Exception as e:
         bbox = None
 
     if bbox and len(bbox) != 4:
