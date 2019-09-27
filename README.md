@@ -17,4 +17,12 @@ source env/bin/activate
 
 ## Usage
 
+[Get an API key from Flickr](https://www.flickr.com/services/api/misc.api_keys.html) and make a file called `credentials.json` which has the following text in it (replace the credentials with your own):
+
+```
+{"KEY":"YOUR_API_KEY", "SECRET":"YOUR_API_SECRET"}
+```
+
+To scrape for a particular search term:
+
 `python scraper.py --search "SEARCH TERM" --bbox minimum_longitude,minimum_latitude,maximum_longitude,maximum_latitude`
