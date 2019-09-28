@@ -26,3 +26,14 @@ source env/bin/activate
 To scrape for a particular search term:
 
 `python scraper.py --search "SEARCH TERM" --bbox minimum_longitude,minimum_latitude,maximum_longitude,maximum_latitude`
+
+
+To scrape for a particular group:
+
+`python scraper.py --group "GROUP URL" --bbox minimum_longitude,minimum_latitude,maximum_longitude,maximum_latitude`
+
+Where GROUP URL is something like https://www.flickr.com/groups/scenery/pool/
+
+Large-sized (1024px width) will be downloaded by default. You can download the original images by passing the flag `--original`.
+
+Limit the number of pages of results downloaded by passing `--max-pages N` where `N` is pages of 500 results each.
