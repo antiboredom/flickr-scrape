@@ -62,8 +62,11 @@ def get_photos(qs, qg, page=1, original=False, bbox=None):
     if bbox is not None and len(bbox) == 4:
         params['bbox'] = ','.join(bbox)
 
-    results = requests.get('https://api.flickr.com/services/rest', params=params).json()['photos']
-    return results
+    results = requests.get('https://api.flickr.com/services/rest', params=params).json()
+    if "photos" not in results:
+        print(results)
+        return None
+    return results["photos"]
 
 
 def search(qs, qg, bbox=None, original=False, max_pages=None):
@@ -84,6 +87,8 @@ def search(qs, qg, bbox=None, original=False, max_pages=None):
         current_page = 1
 
         results = get_photos(qs, qg, page=current_page, original=original, bbox=bbox)
+        if results is None:
+            return
 
         total_pages = results['pages']
         if max_pages is not None and total_pages > max_pages:
@@ -124,7 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--group', '-g', dest='q_group', default=None, required=False, help='Group url, e.g. https://www.flickr.com/groups/scenery/')
     parser.add_argument('--original', '-o', dest='original', action='store_true', default=False, required=False, help='Download original sized photos if True, large (1024px) otherwise')
     parser.add_argument('--max-pages', '-m', dest='max_pages', required=False, help='Max pages (default none)')
-    parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by commas like so: minimum_longitude,minimum_latitude,maximum_longitude,maximum_latitude')
+    parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by spaces like so: minimum_longitude minimum_latitude maximum_longitude maximum_latitude')
     args = parser.parse_args()
 
     qs = args.q_search
@@ -135,7 +140,7 @@ if __name__ == '__main__':
         sys.exit('Must specify a search term or group id')
 
     try:
-        bbox = args.bbox.split(',')
+        bbox = args.bbox.split(' ')
     except Exception as e:
         bbox = None
 
