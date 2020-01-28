@@ -69,7 +69,7 @@ def get_photos(qs, qg, page=1, original=False, bbox=None):
     return results["photos"]
 
 
-def search(qs, qg, bbox=None, original=False, max_pages=None):
+def search(qs, qg, bbox=None, original=False, max_pages=None,start_page=1):
     # create a folder for the query if it does not exist
     foldername = os.path.join('images', re.sub(r'[\W]', '_', qs if qs is not None else "group_%s"%qg))
     if bbox is not None:
@@ -78,21 +78,21 @@ def search(qs, qg, bbox=None, original=False, max_pages=None):
     if not os.path.exists(foldername):
         os.makedirs(foldername)
 
-    jsonfilename = os.path.join(foldername, 'results.json')
+    jsonfilename = os.path.join(foldername, 'results' + str(start_page) + '.json')
 
     if not os.path.exists(jsonfilename):
 
         # save results as a json file
         photos = []
-        current_page = 1
+        current_page = start_page
 
         results = get_photos(qs, qg, page=current_page, original=original, bbox=bbox)
         if results is None:
             return
 
         total_pages = results['pages']
-        if max_pages is not None and total_pages > max_pages:
-            total_pages = max_pages
+        if max_pages is not None and total_pages > start_page + max_pages:
+            total_pages = start_page + max_pages
 
         photos += results['photo']
 
@@ -129,6 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--group', '-g', dest='q_group', default=None, required=False, help='Group url, e.g. https://www.flickr.com/groups/scenery/')
     parser.add_argument('--original', '-o', dest='original', action='store_true', default=False, required=False, help='Download original sized photos if True, large (1024px) otherwise')
     parser.add_argument('--max-pages', '-m', dest='max_pages', required=False, help='Max pages (default none)')
+    parser.add_argument('--start-page', '-st', dest='start_page', required=False, help='Start page (default 1)')
     parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by spaces like so: minimum_longitude minimum_latitude maximum_longitude maximum_latitude')
     args = parser.parse_args()
 
@@ -158,5 +159,8 @@ if __name__ == '__main__':
     if args.max_pages:
         max_pages = int(args.max_pages)
 
-    search(qs, qg, bbox, original, max_pages)
+    if args.start_page:
+        start_page = int(args.start_page)
+
+    search(qs, qg, bbox, original, max_pages, start_page)
 
