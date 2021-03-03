@@ -130,7 +130,7 @@ if __name__ == '__main__':
     parser.add_argument('--original', '-o', dest='original', action='store_true', default=False, required=False, help='Download original sized photos if True, large (1024px) otherwise')
     parser.add_argument('--output_dir', '-t', dest='output_dir', default='images', required=False, help='Root directory to download to')
     parser.add_argument('--max-pages', '-m', dest='max_pages', required=False, help='Max pages (default none)')
-    parser.add_argument('--start-page', '-st', dest='start_page', required=False, help='Start page (default 1)')
+    parser.add_argument('--start-page', '-st', dest='start_page', required=False, default=1, help='Start page (default 1)')
     parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by spaces like so: minimum_longitude minimum_latitude maximum_longitude maximum_latitude')
     args = parser.parse_args()
 
