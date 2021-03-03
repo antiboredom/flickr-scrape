@@ -69,9 +69,9 @@ def get_photos(qs, qg, page=1, original=False, bbox=None):
     return results["photos"]
 
 
-def search(qs, qg, bbox=None, original=False, max_pages=None,start_page=1):
+def search(qs, qg, bbox=None, original=False, max_pages=None, start_page=1, output_dir='images'):
     # create a folder for the query if it does not exist
-    foldername = os.path.join('images', re.sub(r'[\W]', '_', qs if qs is not None else "group_%s"%qg))
+    foldername = os.path.join(output_dir, re.sub(r'[\W]', '_', qs if qs is not None else "group_%s"%qg))
     if bbox is not None:
         foldername += '_'.join(bbox)
 
@@ -128,6 +128,7 @@ if __name__ == '__main__':
     parser.add_argument('--search', '-s', dest='q_search', default=None, required=False, help='Search term')
     parser.add_argument('--group', '-g', dest='q_group', default=None, required=False, help='Group url, e.g. https://www.flickr.com/groups/scenery/')
     parser.add_argument('--original', '-o', dest='original', action='store_true', default=False, required=False, help='Download original sized photos if True, large (1024px) otherwise')
+    parser.add_argument('--output_dir', '-t', dest='output_dir', default='images', required=False, help='Root directory to download to')
     parser.add_argument('--max-pages', '-m', dest='max_pages', required=False, help='Max pages (default none)')
     parser.add_argument('--start-page', '-st', dest='start_page', required=False, help='Start page (default 1)')
     parser.add_argument('--bbox', '-b', dest='bbox', required=False, help='Bounding box to search in, separated by spaces like so: minimum_longitude minimum_latitude maximum_longitude maximum_latitude')
@@ -136,6 +137,7 @@ if __name__ == '__main__':
     qs = args.q_search
     qg = args.q_group
     original = args.original
+    output_dir = args.output_dir
 
     if qs is None and qg is None:
         sys.exit('Must specify a search term or group id')
@@ -162,5 +164,5 @@ if __name__ == '__main__':
     if args.start_page:
         start_page = int(args.start_page)
 
-    search(qs, qg, bbox, original, max_pages, start_page)
+    search(qs, qg, bbox, original, max_pages, start_page, output_dir)
 
